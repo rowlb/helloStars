@@ -3,6 +3,7 @@
 #include <sstream> // string stream
 #include <vector> // dynamic array
 #include <string>
+#include "types.h"
 
 std::vector<std::vector<std::string>> readCSV(const std::string& filename) {
     std::vector<std::vector<std::string>> data;
@@ -36,18 +37,8 @@ std::vector<std::vector<std::string>> readCSV(const std::string& filename) {
     return data;
 }
 
-struct DegreeNode {
-    double degree;
-    int starID;
-};
-
-struct Star {
-    int starID;
-    double vMag;
-};
-
-int main() {
-    auto data = readCSV("stars.csv");
+InitResult init(const std::string& filename) {
+    auto data = readCSV(filename);
     
     int raicrsCol;
     int deicrsCol;
@@ -78,8 +69,8 @@ int main() {
     std::cout << vMagCol << "\t";
 
     
-    std::vector<std::vector<DegreeNode>> RAdegrees(361);
-    std::vector<std::vector<DegreeNode>> DEdegrees(181);    // stored from -90 to 90
+    std::vector<std::vector<DegreeNode>> degreeListsRA(361);
+    std::vector<std::vector<DegreeNode>> degreeListsDE(181);    // stored from -90 to 90
     std::vector<Star> stars;
 
     
@@ -169,8 +160,8 @@ int main() {
             //std::cout << RAListIndex << std::endl;
             //std::cout << DEListIndex << std::endl;
             
-            DEdegrees.at(DEListIndex).push_back(deNode);
-            RAdegrees.at(RAListIndex).push_back(raNode);
+            degreeListsDE.at(DEListIndex).push_back(deNode);
+            degreeListsRA.at(RAListIndex).push_back(raNode);
 
             Star star = {starID, vMag};
             stars.push_back(star);
@@ -181,11 +172,6 @@ int main() {
         }
         
     }
-    for (DegreeNode degreeNode : RAdegrees.at(101)) {
-        std::cout << degreeNode.degree << "\t";
-        std::cout << degreeNode.starID << std::endl;
-    }
-
-    return 0;
+    InitResult result = {degreeListsRA, degreeListsRA, stars};
+    return result;
 };
-
