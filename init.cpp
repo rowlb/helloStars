@@ -36,12 +36,23 @@ std::vector<std::vector<std::string>> readCSV(const std::string& filename) {
     return data;
 }
 
-int init() {
+struct DegreeNode {
+    double degree;
+    int starID;
+};
+
+struct Star {
+    int starID;
+    double vMag;
+};
+
+int main() {
     auto data = readCSV("stars.csv");
     
     int raicrsCol;
     int deicrsCol;
     int vMagCol;
+    int HIPCol = 0;
 
     // identifying columns (needed in case data moves around)
     int i = 0;
@@ -55,21 +66,126 @@ int init() {
         else if (cell == "Vmag") {
             vMagCol = i;
         }
+        // this doesnt work for some reason so i just manually set it
+        // else if (cell == "HIP") {
+        //     HIPCol = i;
+        // }
         i++;
     }
+
     std::cout << raicrsCol << "\t";
     std::cout << deicrsCol << "\t";
     std::cout << vMagCol << "\t";
 
-    // for (const auto& row : data) {
-    //     int j = 0;
-    //     for (const auto& cell : row) {
-    //         //std::cout << cell << "\t";
-    //     }
-    //     //std::cout << std::endl;
-    //     j++;
-    // }
+    
+    std::vector<std::vector<DegreeNode>> RAdegrees(361);
+    std::vector<std::vector<DegreeNode>> DEdegrees(181);    // stored from -90 to 90
+    std::vector<Star> stars;
+
+    
+    
+    
+
+    for (const auto& row : data) {
+        //std::cout << row.at(0) << std::endl;
+        int j = 0;
+        double raicrs;
+        double deicrs;
+        double vMag;
+        int starID;
+        try {
+            for (const auto& cell : row) {
+                if (j == raicrsCol) {
+                    try { 
+                        raicrs = std::stod(cell);
+                    }
+                    catch (const std::invalid_argument&) { 
+                        std::cerr << "Invalid argument for RAICRS stod" << std::endl;
+                        break;
+                    }
+                    catch (const std::out_of_range&) {
+                        std::cerr << "stod out of range" << std::endl;
+                        break;
+                    }
+                }
+                else if (j == deicrsCol) {
+                    try { 
+                        deicrs = std::stod(cell);
+                    }
+                    catch (const std::invalid_argument&) { 
+                        std::cerr << "Invalid argument for DEICRS stod" << std::endl;
+                        break;
+                    }
+                    catch (const std::out_of_range&) {
+                        std::cerr << "stod out of range" << std::endl;
+                        break;
+                    }
+                }
+                else if (j == vMagCol) {
+                    try {    
+                        vMag = std::stod(cell);
+                    }
+                    catch (const std::invalid_argument&) { 
+                        std::cerr << "Invalid argument for vMag stod" << std::endl;
+                        break;
+                    }
+                    catch (const std::out_of_range&) {
+                        std::cerr << "stod out of range" << std::endl;
+                        break;
+                    }
+                }
+                else if (j == HIPCol) {
+                    try { 
+                        starID = std::stoi(cell);
+                    }
+                    catch (const std::invalid_argument&) { 
+                        std::cerr << "Invalid argument for HIP stoi" << std::endl;
+                        break;
+                    }
+                    catch (const std::out_of_range&) {
+                        std::cerr << "stoi out of range" << std::endl;
+                        break;
+                    }
+                }
+                j++;
+                //std::cout << cell << "\t";
+            }
+        }
+        catch (const std::exception& e) {
+            std::cerr << e.what() << std::endl << "Something went wrong with this row" << std::endl;
+        }
+        // populate lists with row info
+        try {
+
+            //std::cout << "DE: " << deicrs << std::endl;
+            //std::cout << "RA: " << raicrs << std::endl;
+
+            int DEListIndex = static_cast<int>(deicrs + 90); // offset 90 to account for -90 to 90 range
+            int RAListIndex = static_cast<int>(raicrs);
+            
+            DegreeNode deNode = {deicrs, starID};
+            DegreeNode raNode = {raicrs, starID};
+
+            //std::cout << RAListIndex << std::endl;
+            //std::cout << DEListIndex << std::endl;
+            
+            DEdegrees.at(DEListIndex).push_back(deNode);
+            RAdegrees.at(RAListIndex).push_back(raNode);
+
+            Star star = {starID, vMag};
+            stars.push_back(star);
+        }
+        catch (const std::exception& e) {
+            std::cerr << e.what() << std::endl << "Invalid row entry" << std::endl;
+            continue;
+        }
+        
+    }
+    for (DegreeNode degreeNode : RAdegrees.at(101)) {
+        std::cout << degreeNode.degree << "\t";
+        std::cout << degreeNode.starID << std::endl;
+    }
 
     return 0;
-}
+};
 

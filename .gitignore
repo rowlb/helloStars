@@ -2,3 +2,5 @@ init.pdb
 init.obj
 vc140.pdb
 .vscode/tasks.json
+init.exe
+init.ilk
