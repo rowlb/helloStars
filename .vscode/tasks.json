@@ -5,7 +5,7 @@
             "label": "C/C++: cl.exe build active file",
             "command": "cl.exe",
             "args": [
-                "/Zi", 
+                "/Zi",
                 "/MD",
                 "/EHsc",
                 "/nologo",
@@ -13,9 +13,14 @@
                 "main.cpp",
                 "init.cpp",
                 "/I${workspaceFolder}\\Dependencies\\GLFW\\include",
+                "/I${workspaceFolder}\\Dependencies\\GLEW\\include",
                 "/link",
                 "/LIBPATH:${workspaceFolder}\\Dependencies\\GLFW\\lib-vc2026",
-                "glfw3.lib", "opengl32.lib", "user32.lib", "gdi32.lib", "shell32.lib"
+                "/LIBPATH:${workspaceFolder}\\Dependencies\\GLEW\\lib\\Release\\Win32",
+                "glfw3.lib",
+                "glew32s.lib",
+                "opengl32.lib", "user32.lib", "gdi32.lib", "shell32.lib"
+                
             ],
             "options": {
                 "cwd": "${fileDirname}"

@@ -3,12 +3,14 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/Dependencies/GLFW/include"
+                "${workspaceFolder}/Dependencies/GLFW/include",
+                "${workspaceFolder}/Dependencies/GLEW/include"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
-                "_UNICODE"
+                "_UNICODE",
+                "GLEW_STATIC"
             ],
             "windowsSdkVersion": "10.0.26100.0",
             "cStandard": "c17",
