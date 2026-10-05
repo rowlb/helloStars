@@ -69,8 +69,9 @@ InitResult init(const std::string& filename) {
     std::cout << vMagCol << "\t";
 
     
-    std::vector<std::vector<DegreeNode>> degreeListsRA(361);
-    std::vector<std::vector<DegreeNode>> degreeListsDE(181);    // stored from -90 to 90
+  
+    // list of DNs in DA degree of RA degree
+    std::vector<std::vector<std::vector<DegreeNode>>> starLocs(361);
     std::vector<Star> stars;
 
     
@@ -154,14 +155,14 @@ InitResult init(const std::string& filename) {
             int DEListIndex = static_cast<int>(deicrs + 90); // offset 90 to account for -90 to 90 range
             int RAListIndex = static_cast<int>(raicrs);
             
-            DegreeNode deNode = {deicrs, starID};
-            DegreeNode raNode = {raicrs, starID};
+            DegreeNode degNode = {starID, raicrs, deicrs};
+
 
             //std::cout << RAListIndex << std::endl;
             //std::cout << DEListIndex << std::endl;
             
-            degreeListsDE.at(DEListIndex).push_back(deNode);
-            degreeListsRA.at(RAListIndex).push_back(raNode);
+            starLocs.at(RAListIndex).at(DEListIndex).push_back(degNode);
+
 
             Star star = {starID, vMag};
             stars.push_back(star);
@@ -172,6 +173,6 @@ InitResult init(const std::string& filename) {
         }
         
     }
-    InitResult result = {degreeListsRA, degreeListsRA, stars};
+    InitResult result = {stars, starLocs};
     return result;
 };

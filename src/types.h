@@ -2,8 +2,9 @@
 #pragma once
 
 struct DegreeNode {
-    double degree;
     int starID;
+    double RAdegree;
+    double DEdegree;
 };
 
 struct Star {
@@ -11,8 +12,7 @@ struct Star {
     double vMag;
 };
 
-struct InitResult {
-    std::vector<std::vector<DegreeNode>> degreeListsRA;
-    std::vector<std::vector<DegreeNode>> degreesListsDE;    // stored from -90 to 90
+struct InitResult {   
     std::vector<Star> stars;
+    std::vector<std::vector<std::vector<DegreeNode>>> starLocs;
 };
