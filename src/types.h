@@ -14,6 +14,12 @@ struct Star {
     double vMag;
 };
 
+struct Window {
+    int width;
+    int height;
+    double FOV;
+};
+
 struct InitResult {   
     std::vector<Star> stars;
     std::vector<std::vector<std::vector<DegreeNode>>> starLocs;

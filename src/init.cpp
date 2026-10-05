@@ -71,7 +71,7 @@ InitResult init(const std::string& filename) {
     
   
     // list of DNs in DA degree of RA degree
-    std::vector<std::vector<std::vector<DegreeNode>>> starLocs(361, std::vector<std::vector<DegreeNode>>(181));
+    std::vector<std::vector<std::vector<DegreeNode>>> starLocs(360, std::vector<std::vector<DegreeNode>>(180));
     std::vector<Star> stars;
 
     

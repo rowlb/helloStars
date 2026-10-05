@@ -9,13 +9,49 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+// find stars where user clicks
+void MouseClickCallback (GLFWwindow* window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) 
+    {
+        Window* screen = static_cast<Window*>(glfwGetWindowUserPointer(window)); // getting screen size
+
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+        
+        std::cout << xpos << ", " << ypos << std::endl;
+
+
+
+        
+    }
+}
+
 int main() {
+    double FOV = 90;
+    Window screen = {640, 480, FOV};
+    
+    // double FOVht = screenHeight * (FOV/screenWidth);
+    // double RAdegreesInPxl = FOVht / screenHeight;
+    // double DEdegreesInPxl = FOV / screenWidth;
+
+    // std::cout << "FOVht: " << FOVht << std::endl;
+    // std::cout << "RAdegreesInPxl: " << RAdegreesInPxl << std::endl;
+    // std::cout << "DEdegreesInPxl: " << DEdegreesInPxl << std::endl;
+
     std::cout << "Initialising from csv..." << std::endl; 
     InitResult lists = init("stars.csv");
     std::cout << "Initialisation complete." << std::endl; 
 
-    std::vector<DegreeNode> testLoc = lists.starLocs.at(216).at(28);
-    std::cout << "Testing location 217/-62..." << std::endl;
+    
+    
+    // random testing of stars in a location
+    int randRA = rand() % 360;
+    int randDE = rand() % 180;
+    std::vector<DegreeNode> testLoc = lists.starLocs.at(randRA).at(randDE);
+
+    std::cout << "Testing location " << randRA << " | " << randDE-90 << std::endl;
+    
     for (DegreeNode star : testLoc) {
         std::cout << star.id << ", " << star.RAdegree << "|" << star.DEdegree << ", " << lists.stars.at(star.id).vMag << std::endl;
     }
@@ -23,13 +59,15 @@ int main() {
     
     GLFWwindow* window;
 
+    glfwSetWindowUserPointer(window, &screen);  // store size
+
     /* Initialize the library */
     if (!glfwInit())
         return -1;
     
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(screen.width, screen.height, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -38,6 +76,9 @@ int main() {
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+
+
+    glfwSetMouseButtonCallback(window, MouseClickCallback);
 
 
     if (glewInit() != GLEW_OK)
@@ -55,7 +96,9 @@ int main() {
         glfwSwapBuffers(window);
 
         /* Poll for and process events */
-        glfwPollEvents();
+        glfwWaitEvents();
+
+
     }
 
     glfwTerminate();
