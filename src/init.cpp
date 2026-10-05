@@ -84,7 +84,7 @@ InitResult init(const std::string& filename) {
         double raicrs;
         double deicrs;
         double vMag;
-        int starID;
+        int HIP;
         try {
             for (const auto& cell : row) {
                 if (j == raicrsCol) {
@@ -128,7 +128,7 @@ InitResult init(const std::string& filename) {
                 }
                 else if (j == HIPCol) {
                     try { 
-                        starID = std::stoi(cell);
+                        HIP = std::stoi(cell);
                     }
                     catch (const std::invalid_argument&) { 
                         std::cerr << "Invalid argument for HIP stoi" << std::endl;
@@ -155,7 +155,9 @@ InitResult init(const std::string& filename) {
             int DEListIndex = static_cast<int>(deicrs + 90); // offset 90 to account for -90 to 90 range
             int RAListIndex = static_cast<int>(raicrs);
             
-            DegreeNode degNode = {starID, raicrs, deicrs};
+            int id = stars.size();
+
+            DegreeNode degNode = {id, HIP, raicrs, deicrs};
 
 
             //std::cout << RAListIndex << std::endl;
@@ -164,7 +166,10 @@ InitResult init(const std::string& filename) {
             starLocs.at(RAListIndex).at(DEListIndex).push_back(degNode);
 
 
-            Star star = {starID, vMag};
+            Star star = {id, HIP, vMag};
+
+            
+
             stars.push_back(star);
         }
         catch (const std::exception& e) {

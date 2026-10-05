@@ -2,13 +2,15 @@
 #pragma once
 
 struct DegreeNode {
-    int starID;
+    int id;
+    int HIP;
     double RAdegree;
     double DEdegree;
 };
 
 struct Star {
-    int starID;
+    int id;
+    int HIP;
     double vMag;
 };
 

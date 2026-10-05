@@ -17,7 +17,7 @@ int main() {
     std::vector<DegreeNode> testLoc = lists.starLocs.at(216).at(28);
     std::cout << "Testing location 217/-62..." << std::endl;
     for (DegreeNode star : testLoc) {
-        std::cout << star.starID << ", " << star.RAdegree << "|" << star.DEdegree << ", " << lists.stars.at(star.starID).starID << ", " << lists.stars.at(star.starID).vMag << std::endl;
+        std::cout << star.id << ", " << star.RAdegree << "|" << star.DEdegree << ", " << lists.stars.at(star.id).vMag << std::endl;
     }
 
     
