@@ -20,6 +20,11 @@ struct Window {
     double FOV;
 };
 
+struct Angle {
+    double ra;
+    double de;
+};
+
 struct InitResult {   
     std::vector<Star> stars;
     std::vector<std::vector<std::vector<DegreeNode>>> starLocs;

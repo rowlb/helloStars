@@ -9,6 +9,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+InitResult starData;
+
 // find stars where user clicks
 void MouseClickCallback (GLFWwindow* window, int button, int action, int mods)
 {
@@ -21,15 +23,38 @@ void MouseClickCallback (GLFWwindow* window, int button, int action, int mods)
         
         std::cout << xpos << ", " << ypos << std::endl;
 
+        double FOVht = screen->height * (screen->FOV/screen->width);
 
+        // where camera faces
+        double facingDegHorizontal = 180; // between 0 to 360
+        double facingDegVertical = 0; // between -90 to 90
+
+        // how many degrees the click is from center
+        double ydegreeOffset = FOVht * (ypos / screen->height) - FOVht / 2;
+        double xdegreeOffset = screen->FOV * (xpos / screen->width) - screen->FOV / 2;
+
+        // final degree coords of click 
+        int xdegree = facingDegHorizontal + xdegreeOffset;
+        int ydegree = facingDegVertical - ydegreeOffset;
+
+        std::cout << "Degree coords: " << xdegree << ", " << ydegree << std::endl;
 
         
+        // print stars nearby
+        std::vector<DegreeNode> testLoc = starData.starLocs.at(xdegree).at(ydegree+90);
+    
+        for (DegreeNode star : testLoc) {
+            std::cout << star.id << ", " << star.RAdegree << "|" << star.DEdegree << ", " << starData.stars.at(star.id).vMag << std::endl;
+        }
+        
+
     }
 }
 
 int main() {
     double FOV = 90;
     Window screen = {640, 480, FOV};
+    //Angle direction = {180, 0};
     
     // double FOVht = screenHeight * (FOV/screenWidth);
     // double RAdegreesInPxl = FOVht / screenHeight;
@@ -43,6 +68,7 @@ int main() {
     InitResult lists = init("stars.csv");
     std::cout << "Initialisation complete." << std::endl; 
 
+    starData = lists;
     
     
     // random testing of stars in a location
@@ -59,7 +85,7 @@ int main() {
     
     GLFWwindow* window;
 
-    glfwSetWindowUserPointer(window, &screen);  // store size
+    //glfwSetWindowUserPointer(window, &direction);  // store direction
 
     /* Initialize the library */
     if (!glfwInit())
@@ -77,6 +103,7 @@ int main() {
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
+    glfwSetWindowUserPointer(window, &screen);  // store size
 
     glfwSetMouseButtonCallback(window, MouseClickCallback);
 
