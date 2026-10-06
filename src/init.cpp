@@ -44,6 +44,8 @@ InitResult init(const std::string& filename) {
     int deicrsCol;
     int vMagCol;
     int HIPCol = 0;
+    int nameCol;
+    
 
     // identifying columns (needed in case data moves around)
     int i = 0;
@@ -56,6 +58,9 @@ InitResult init(const std::string& filename) {
         }
         else if (cell == "Vmag") {
             vMagCol = i;
+        }
+        else if (cell == "Name") {
+            nameCol = i;
         }
         // this doesnt work for some reason so i just manually set it
         // else if (cell == "HIP") {
@@ -85,6 +90,7 @@ InitResult init(const std::string& filename) {
         double deicrs;
         double vMag;
         int HIP;
+        std::string name = "";
         try {
             for (const auto& cell : row) {
                 if (j == raicrsCol) {
@@ -139,6 +145,15 @@ InitResult init(const std::string& filename) {
                         break;
                     }
                 }
+                else if (j == nameCol) {
+                    try { 
+                        name = cell;
+                    }
+                    catch (const std::invalid_argument&) { 
+                        std::cerr << "Invalid argument for name" << std::endl;
+                        continue;
+                    }
+                }
                 j++;
                 //std::cout << cell << "\t";
             }
@@ -166,7 +181,7 @@ InitResult init(const std::string& filename) {
             starLocs.at(RAListIndex).at(DEListIndex).push_back(degNode);
 
 
-            Star star = {id, HIP, vMag};
+            Star star = {id, HIP, vMag, name};
 
             
 

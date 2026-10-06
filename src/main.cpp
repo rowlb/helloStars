@@ -44,7 +44,11 @@ void MouseClickCallback (GLFWwindow* window, int button, int action, int mods)
         std::vector<DegreeNode> testLoc = starData.starLocs.at(xdegree).at(ydegree+90);
     
         for (DegreeNode star : testLoc) {
-            std::cout << star.id << ", " << star.RAdegree << "|" << star.DEdegree << ", " << starData.stars.at(star.id).vMag << std::endl;
+            std::cout << star.id << ", " << star.RAdegree << "|" << star.DEdegree << ", " << starData.stars.at(star.id).vMag;
+            if (starData.stars.at(star.id).name.length() > 0) {
+                std::cout << ", " << starData.stars.at(star.id).name;
+            }
+            std::cout << std::endl;
         }
         
 
@@ -53,7 +57,7 @@ void MouseClickCallback (GLFWwindow* window, int button, int action, int mods)
 
 int main() {
     double FOV = 90;
-    Window screen = {640, 480, FOV};
+    Window screen = {800, 600, FOV};
     //Angle direction = {180, 0};
     
     // double FOVht = screenHeight * (FOV/screenWidth);
@@ -65,7 +69,7 @@ int main() {
     // std::cout << "DEdegreesInPxl: " << DEdegreesInPxl << std::endl;
 
     std::cout << "Initialising from csv..." << std::endl; 
-    InitResult lists = init("stars.csv");
+    InitResult lists = init("starsN.csv");
     std::cout << "Initialisation complete." << std::endl; 
 
     starData = lists;

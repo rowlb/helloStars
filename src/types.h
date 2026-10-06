@@ -1,4 +1,5 @@
 #include <vector>
+#include <string>
 #pragma once
 
 struct DegreeNode {
@@ -12,6 +13,7 @@ struct Star {
     int id;
     int HIP;
     double vMag;
+    std::string name;
 };
 
 struct Window {
