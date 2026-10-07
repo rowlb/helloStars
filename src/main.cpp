@@ -41,16 +41,20 @@ void MouseClickCallback (GLFWwindow* window, int button, int action, int mods)
 
         std::cout << "Degree coords: " << xdegree << ", " << ydegree << std::endl;
 
+        try {
+            // print stars nearby
+            std::vector<DegreeNode> testLoc = starData.starLocs.at(xdegree).at(ydegree+90);
         
-        // print stars nearby
-        std::vector<DegreeNode> testLoc = starData.starLocs.at(xdegree).at(ydegree+90);
-    
-        for (DegreeNode star : testLoc) {
-            std::cout << star.id << ", " << star.RAdegree << "|" << star.DEdegree << ", " << starData.stars.at(star.id).vMag;
-            if (starData.stars.at(star.id).name.length() > 0) {
-                std::cout << ", " << starData.stars.at(star.id).name;
+            for (DegreeNode star : testLoc) {
+                std::cout << star.id << ", " << star.RAdegree << "|" << star.DEdegree << ", " << starData.stars.at(star.id).vMag;
+                if (starData.stars.at(star.id).name.length() > 0) {
+                    std::cout << ", " << starData.stars.at(star.id).name;
+                }
+                std::cout << std::endl;
             }
-            std::cout << std::endl;
+        }
+        catch (const std::out_of_range&) {
+            std::cerr << "Area clicked out of range" << std::endl;
         }
         
 
@@ -59,25 +63,56 @@ void MouseClickCallback (GLFWwindow* window, int button, int action, int mods)
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    int panAmount = 10;
-    Window* screen = static_cast<Window*>(glfwGetWindowUserPointer(window));
     
+    int zoomAmount = 6;
+    Window* screen = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    int panAmount = (int) 1 * (screen->FOV / 4);
+
     if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
-        screen->xfacing = (screen->xfacing + panAmount) % 360;
+        if (screen->xfacing + panAmount >= 360) {
+            screen->xfacing -= 360;
+        }
+        screen->xfacing = (screen->xfacing + panAmount);
+        std::cout << screen->xfacing << ", " << screen->yfacing << std::endl;
     }
     else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
         if (screen->xfacing < panAmount) {
             screen->xfacing += 360;
         }
-        screen->xfacing = (screen->xfacing - panAmount) % 360;
+        screen->xfacing = (screen->xfacing - panAmount);
+        std::cout << screen->xfacing << ", " << screen->yfacing << std::endl;
     }
     else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
-        screen->yfacing = (screen->yfacing - panAmount) % 180;
+        if (screen->yfacing - panAmount <= -90) {
+            screen->yfacing += 180;
+        }
+        screen->yfacing = (screen->yfacing - panAmount);
+        std::cout << screen->xfacing << ", " << screen->yfacing << std::endl;
     }
     else if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
-        screen->yfacing = (screen->yfacing + panAmount) % 180;
+        if (screen->yfacing + panAmount >= 90) {
+            screen->yfacing -= 180;
+        }
+        screen->yfacing = (screen->yfacing + panAmount);
+        std::cout << screen->xfacing << ", " << screen->yfacing << std::endl;
     }
-    std::cout << screen->xfacing << ", " << screen->yfacing << std::endl;
+    //FOV change
+    else if (key == GLFW_KEY_P && action == GLFW_PRESS) {
+        if (screen->FOV - zoomAmount > 0) {
+            screen->FOV -= zoomAmount;
+        }
+        else {
+            screen->FOV = 1;
+        }
+        std::cout << "FOV: " << screen->FOV << std::endl;
+    }
+    else if (key == GLFW_KEY_O && action == GLFW_PRESS) {
+        if (screen->FOV + zoomAmount < 360) {
+            screen->FOV += zoomAmount;
+        }
+        std::cout << "FOV: " << screen->FOV << std::endl;
+    }
+   
     //glfwSetWindowUserPointer(window, &newScreen);
 }
 
