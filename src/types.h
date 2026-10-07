@@ -20,6 +20,9 @@ struct Window {
     int width;
     int height;
     double FOV;
+    int xfacing;
+    int yfacing;
+
 };
 
 struct Angle {

@@ -26,8 +26,10 @@ void MouseClickCallback (GLFWwindow* window, int button, int action, int mods)
         double FOVht = screen->height * (screen->FOV/screen->width);
 
         // where camera faces
-        double facingDegHorizontal = 180; // between 0 to 360
-        double facingDegVertical = 0; // between -90 to 90
+        double facingDegHorizontal = screen->xfacing; // between 0 to 360
+        double facingDegVertical = screen->yfacing; // between -90 to 90
+
+        std::cout << "Facing: " << facingDegHorizontal << ", " << facingDegVertical << std::endl;  
 
         // how many degrees the click is from center
         double ydegreeOffset = FOVht * (ypos / screen->height) - FOVht / 2;
@@ -55,10 +57,35 @@ void MouseClickCallback (GLFWwindow* window, int button, int action, int mods)
     }
 }
 
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    int panAmount = 10;
+    Window* screen = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    
+    if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
+        screen->xfacing = (screen->xfacing + panAmount) % 360;
+    }
+    else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
+        if (screen->xfacing < panAmount) {
+            screen->xfacing += 360;
+        }
+        screen->xfacing = (screen->xfacing - panAmount) % 360;
+    }
+    else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
+        screen->yfacing = (screen->yfacing - panAmount) % 180;
+    }
+    else if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
+        screen->yfacing = (screen->yfacing + panAmount) % 180;
+    }
+    std::cout << screen->xfacing << ", " << screen->yfacing << std::endl;
+    //glfwSetWindowUserPointer(window, &newScreen);
+}
+
 int main() {
     double FOV = 90;
-    Window screen = {800, 600, FOV};
-    //Angle direction = {180, 0};
+    
+    Window screen = {800, 600, FOV, 180, 0};
+  
     
     // double FOVht = screenHeight * (FOV/screenWidth);
     // double RAdegreesInPxl = FOVht / screenHeight;
@@ -110,6 +137,7 @@ int main() {
     glfwSetWindowUserPointer(window, &screen);  // store size
 
     glfwSetMouseButtonCallback(window, MouseClickCallback);
+    glfwSetKeyCallback(window, keyCallback);
 
 
     if (glewInit() != GLEW_OK)
